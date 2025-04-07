@@ -2,7 +2,7 @@
 
 一个 SwiftUI 自动翻页的轮播图组件，支持自定义内容、翻页间隔、圆角、阴影。
 
-<img src="assets/preview.gif" width="100%" alt="AutoPagingTabView Preview" />
+![AutoPagingTabView 预览](assets/preview.gif)
 
 ## ✅ 功能特色
 
