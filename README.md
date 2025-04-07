@@ -7,19 +7,14 @@
 ## ✅ 功能特色
 
 - 自动翻页（定时器控制）
-- 支持循环
 - 自定义页面内容（使用 ViewBuilder）
 - 圆角、阴影、内边距
-- 可选分页指示器（支持 `.inside` 和 `.outside`）
 - 完全 SwiftUI，轻量易集成
 
 ## 🚀 安装方式
 
 在你的项目 `Package.swift` 中加入：
 
-```swift
-.package(url: "https://github.com/yourname/AutoPagingTabView.git", from: "1.0.0")
-```
 
 然后在你需要的文件中导入：
 
