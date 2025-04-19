@@ -16,55 +16,24 @@
 在你的项目 `Package.swift` 中加入：
 
 
-然后在你需要的文件中导入：
-
-```swift
-import AutoPagingTabView
-```
-
 ## 🧪 使用示例
 
 ```swift
 import SwiftUI
-import AutoPagingTabView // 如果你是通过 SPM 引入的包
-
-struct Banner: Identifiable {
-    let id = UUID()
-    let title: String
-    let color: Color
-}
+import AutoPagingTabView
 
 struct ExampleAutoPagingView: View {
-    let banners = [
-        Banner(title: "欢迎", color: .red),
-        Banner(title: "发现", color: .green),
-        Banner(title: "享受", color: .blue),
-        Banner(title: "世界", color: .orange)
-    ]
-    
     var body: some View {
-        VStack {
+        VStack {ß
             AutoPagingTabView(
-                data: banners,
+                titles: ["欢迎", "发现", "享受", "世界"],
+                colors: [.red, .green, .blue, .orange],
                 interval: 2,
                 cornerRadius: 30,
                 outerPadding: 30,
                 shadowRadius: 10
-            ) { banner in
-                ZStack {
-                    banner.color
-                    Text(banner.title)
-                        .font(.largeTitle.bold())
-                        .foregroundColor(.white)
-                }
-                .frame(height: 200)
-            }
-            
-            Spacer()
+            )
         }
-       // .padding(.top, 40)
-      //  .background(Color(UIColor.systemGroupedBackground))
-        .ignoresSafeArea()
     }
 }
 
@@ -79,5 +48,5 @@ struct ExampleAutoPagingView: View {
 |---------------------|---------------------|------------|------------------------------|
 | `interval`          | `TimeInterval`      | `3`        | 自动翻页间隔（秒）           |
 | `cornerRadius`      | `CGFloat`           | `12`       | 内容卡片的圆角                |
-| `horizontalPadding` | `CGFloat`           | `16`       | 卡片左右间距                  |
+| `outerPadding`      | `CGFloat`           | `16`       | 卡片左右间距                  |
 | `shadowRadius`      | `CGFloat`           | `4`        | 阴影模糊半径                  |
