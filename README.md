@@ -22,23 +22,22 @@
 import SwiftUI
 import AutoPagingTabView
 
-struct ExampleAutoPagingView: View {
+struct ExamplePagingView: View {
     var body: some View {
-        VStack {ß
-            AutoPagingTabView(
-                titles: ["欢迎", "发现", "享受", "世界"],
-                colors: [.red, .green, .blue, .orange],
-                interval: 2,
-                cornerRadius: 30,
-                outerPadding: 30,
-                shadowRadius: 10
-            )
-        }
+        AutoPagingTabView(
+            views: [
+                AnyView(WelcomePage()),
+                AnyView(FeaturePage()),
+                AnyView(GuidePage()),
+                AnyView(StartPage())
+            ],
+            interval: 2,
+            cardHeight: 200,
+            cornerRadius: 24,
+            shadowRadius: 8,
+            outerPadding: 30
+        )
     }
-}
-
-#Preview {
-    ExampleAutoPagingView()
 }
 ```
 

@@ -2,81 +2,71 @@ import SwiftUI
 import Combine
 
 public struct AutoPagingTabView: View {
-    let titles: [String]
-    let colors: [Color]
-    let interval: TimeInterval
-    let cornerRadius: CGFloat
-    let outerPadding: CGFloat
-    let shadowRadius: CGFloat
-
-    private var count: Int { min(titles.count, colors.count) }
-    private var loopedCount: Int { count + 2 }
+    private let interval: TimeInterval
+    private let views: [AnyView]
+    private let cardHeight: CGFloat
+    private let cornerRadius: CGFloat
+    private let shadowRadius: CGFloat
+    private let outerPadding: CGFloat
 
     @State private var currentIndex: Int = 1
     @State private var timer: Publishers.Autoconnect<Timer.TimerPublisher>
 
     public init(
-        titles: [String],
-        colors: [Color],
+        views: [AnyView],
         interval: TimeInterval = 3,
-        cornerRadius: CGFloat = 12,
-        outerPadding: CGFloat = 16,
-        shadowRadius: CGFloat = 4
+        cardHeight: CGFloat = 240,
+        cornerRadius: CGFloat = 20,
+        shadowRadius: CGFloat = 6,
+        outerPadding: CGFloat = 24
     ) {
-        self.titles = titles
-        self.colors = colors
         self.interval = interval
+        self.views = views
+        self.cardHeight = cardHeight
         self.cornerRadius = cornerRadius
-        self.outerPadding = outerPadding
         self.shadowRadius = shadowRadius
+        self.outerPadding = outerPadding
         self._timer = State(initialValue: Timer.publish(every: interval, on: .main, in: .common).autoconnect())
     }
 
     public var body: some View {
-        TabView(selection: $currentIndex) {
-            // 前置复制页（最后一页）
-            cardView(index: count - 1)
-                .tag(0)
+        if views.count < 1 {
+            EmptyView()
+        } else {
+            let count = views.count
+            let loopedViews = [views.last!] + views + [views.first!]
+            let total = count + 2
 
-            ForEach(0..<count, id: \.self) { index in
-                cardView(index: index)
-                    .tag(index + 1)
+            TabView(selection: $currentIndex) {
+                ForEach(0..<total, id: \.self) { i in
+                    loopedViews[i]
+                        .frame(maxWidth: .infinity)
+                        .frame(height: cardHeight)
+                        .background(Color.white)
+                        .cornerRadius(cornerRadius)
+                        .shadow(radius: shadowRadius)
+                        .padding(.horizontal, outerPadding)
+                        .tag(i)
+                }
             }
-
-            // 后置复制页（第一页）
-            cardView(index: 0)
-                .tag(loopedCount - 1)
-        }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .onReceive(timer) { _ in
-            withAnimation {
-                currentIndex += 1
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .onReceive(timer) { _ in
+                withAnimation {
+                    currentIndex += 1
+                }
             }
-        }
-        .onChange(of: currentIndex) { newIndex in
-            if newIndex == loopedCount - 1 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    withAnimation(.none) {
-                        currentIndex = 1
+            .onChange(of: currentIndex) { newIndex in
+                if newIndex == total - 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        withAnimation(.none) {
+                            currentIndex = 1
+                        }
                     }
                 }
             }
+            .onAppear {
+                currentIndex = 1
+            }
         }
-        .onAppear {
-            currentIndex = 1
-        }
-    }
-
-    private func cardView(index: Int) -> some View {
-        ZStack {
-            colors[index]
-            Text(titles[index])
-                .font(.largeTitle.bold())
-                .foregroundColor(.white)
-        }
-        .frame(height: 200)
-        .cornerRadius(cornerRadius)
-        .shadow(radius: shadowRadius)
-        .padding(.horizontal, outerPadding)
     }
 }
